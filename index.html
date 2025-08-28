@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>마영전 도구 모음 (가칭)</title>
+  <meta name="description" content="마영전 타이틀 계산기, 캐릭터 조회, 공지 모아보기 등 유틸리티 모음" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+</head>
+<body>
+  <!-- 상단 고정 네비게이션 -->
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="./">마영전 도구 모음</a>
+      <nav class="nav">
+        <a class="nav__btn" href="./pages/character.html">캐릭터조회</a>
+        <a class="nav__btn" href="./pages/wip1.html">개발예정1</a>
+        <a class="nav__btn" href="./pages/wip2.html">개발예정2</a>
+        <a class="nav__btn" href="./pages/wip3.html">개발예정3</a>
+        <a class="nav__btn" href="./pages/wip4.html">개발예정4</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>마영전 종합 유틸리티(가칭)</h1>
+      <p class="hero__sub">
+        타이틀 계산기와 캐릭터 조회를 중심으로, 누구나 쉽게 전투력을 끌어올릴 수 있게 돕는 웹 도구.
+        디스코드 공지 알림은 기존 봇이 담당하고, 이곳은 조회·계산·모아보기를 책임집니다.
+      </p>
+    </section>
+
+    <section class="quick-tiles">
+      <!-- 필요 시 메인에서 바로 진입 가능한 타일 버튼 -->
+      <a class="tile" href="./pages/character.html" aria-label="캐릭터조회">
+        <h3>캐릭터조회</h3>
+        <p>닉네임/서버로 기본 정보 스냅샷</p>
+      </a>
+      <a class="tile" href="./pages/wip1.html" aria-label="개발예정1">
+        <h3>개발예정1</h3>
+        <p>타이틀 계산기(초안)</p>
+      </a>
+      <a class="tile" href="./pages/wip2.html" aria-label="개발예정2">
+        <h3>개발예정2</h3>
+        <p>공지 모아보기</p>
+      </a>
+      <a class="tile" href="./pages/wip3.html" aria-label="개발예정3">
+        <h3>개발예정3</h3>
+        <p>통계 대시보드</p>
+      </a>
+      <a class="tile" href="./pages/wip4.html" aria-label="개발예정4">
+        <h3>개발예정4</h3>
+        <p>기타 도구</p>
+      </a>
+    </section>
+
+    <section class="howto">
+      <h2>사용 방법 (요약)</h2>
+      <ol>
+        <li>상단 배너에서 원하는 도구를 선택합니다.</li>
+        <li>각 페이지 상단의 2~3줄 가이드를 먼저 확인합니다.</li>
+        <li>초기 버전은 정적 페이지로 시작하고, 이후 API 연동/계산 로직을 단계적으로 추가합니다.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <small>© 2025 Vindictus Tools (가칭). 비공식 팬 프로젝트.</small>
+    </div>
+  </footer>
+</body>
+</html>

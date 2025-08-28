@@ -1,0 +1,99 @@
+:root{
+  --bg:#0b0c10;
+  --elev:#111217;
+  --card:#151821;
+  --text:#e6e6e9;
+  --muted:#9aa0a6;
+  --accent:#FF8C00; /* devCAT 오렌지톤 */
+  --border:#242735;
+  --maxw:1080px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Noto Sans KR', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:linear-gradient(180deg,#0a0b0f 0%, #0f1117 100%);
+  color:var(--text);
+  line-height:1.6;
+}
+
+/* 레이아웃 공통 */
+.container{max-width:var(--maxw); margin:0 auto; padding:0 16px}
+
+/* 상단바 */
+.topbar{
+  position:sticky; top:0; z-index:1000;
+  backdrop-filter:saturate(180%) blur(10px);
+  background:rgba(10,12,16,.65);
+  border-bottom:1px solid var(--border);
+}
+.topbar__inner{
+  display:flex; align-items:center; justify-content:space-between;
+  height:64px;
+}
+.brand{
+  text-decoration:none; color:var(--text);
+  font-weight:700; letter-spacing:.2px;
+}
+.nav{display:flex; gap:8px; flex-wrap:wrap}
+.nav__btn{
+  display:inline-block; padding:10px 14px;
+  border-radius:999px; text-decoration:none;
+  background:#191c25; color:var(--text);
+  border:1px solid var(--border);
+  transition:transform .08s ease, background .2s ease, border-color .2s ease;
+  font-weight:600; font-size:14px;
+}
+.nav__btn:hover{transform:translateY(-1px); background:#1d2130; border-color:#2b3042}
+.nav__btn:active{transform:translateY(0) scale(.98)}
+.nav__btn:nth-child(1){border-color:rgba(255,140,0,.45)}
+.nav__btn:nth-child(1):hover{border-color:var(--accent)}
+
+/* 히어로 */
+.hero{padding:48px 0 20px}
+.hero h1{
+  margin:0 0 8px; font-size:28px; line-height:1.25;
+}
+.hero__sub{margin:0; color:var(--muted)}
+
+/* 타일 버튼 */
+.quick-tiles{
+  display:grid; gap:14px;
+  grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+  margin:28px 0 8px;
+}
+.tile{
+  display:block; padding:18px; border-radius:16px;
+  background:var(--card); text-decoration:none; color:var(--text);
+  border:1px solid var(--border);
+  transition:transform .08s ease, box-shadow .15s ease, border-color .2s ease;
+}
+.tile h3{margin:0 0 6px; font-size:18px}
+.tile p{margin:0; color:var(--muted); font-size:14px}
+.tile:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.25);
+  border-color:#2b3042;
+}
+
+/* 사용법 */
+.howto{padding:20px 0 40px}
+.howto h2{margin:0 0 8px; font-size:20px}
+.howto ol{margin:8px 0 0 20px}
+.howto li{margin:6px 0}
+
+/* 푸터 */
+.footer{
+  border-top:1px solid var(--border);
+  background:rgba(10,12,16,.5);
+  padding:20px 0;
+  color:var(--muted);
+}
+
+/* 반응형(모바일 여백 보정) */
+@media (max-width:520px){
+  .topbar__inner{height:72px}
+  .nav{gap:6px}
+  .nav__btn{padding:9px 12px; font-size:13px}
+}
