@@ -23,17 +23,30 @@
 
   <main class="container">
     <section class="hero">
-      <h1>캐릭터 조회 (이식 중)</h1>
-      <p class="hero__sub">ㄱㄷ</p>
+      <h1>캐릭터 조회</h1>
+      <p class="hero__sub">닉네임을 입력하면 기본 정보·길드·장착 타이틀·주요 스탯을 보여줍니다. (초기 버전)</p>
     </section>
 
-    <section class="howto">
-      <h2>사용 방법 (예정)</h2>
-      <ol>
-        <li>서버/닉네임을 입력합니다.</li>
-        <li>조회 결과(클래스, 주요 스탯)를 확인합니다.</li>
-        <li>“타이틀 계산으로 이동” 버튼으로 바로 넘어갈 수 있게 연결합니다.</li>
-      </ol>
+    <section style="margin: 12px 0 24px;">
+      <form id="searchForm" class="quick-tiles" style="grid-template-columns: 1fr;">
+        <div class="tile" style="display:flex;flex-direction:column;gap:10px;">
+          <label for="nickname"><strong>캐릭터 닉네임</strong></label>
+          <input id="nickname" name="nickname" type="text" placeholder="예: 미세리" required
+                 style="padding:12px;border-radius:12px;border:1px solid var(--border);background:#11131a;color:var(--text);">
+          <button id="searchBtn" type="submit" class="nav__btn" style="width:max-content;">조회</button>
+          <small style="color:var(--muted)">※ 서버 선택은 Nexon OpenAPI에서 별도 필요치 않아 닉네임만으로 조회합니다.</small>
+        </div>
+      </form>
+    </section>
+
+    <section id="result" class="howto" style="display:none;">
+      <h2>조회 결과</h2>
+      <div id="card" class="tile" style="padding:16px;"></div>
+    </section>
+
+    <section id="errorBox" class="howto" style="display:none;">
+      <h2>오류</h2>
+      <div class="tile" id="errorMsg"></div>
     </section>
   </main>
 
@@ -42,5 +55,83 @@
       <small>© 2025 Vindictus Tools (가칭).</small>
     </div>
   </footer>
+
+  <script>
+    // ❗❗ 운영 시엔 아래를 NUC(백엔드) 주소로 바꿔줘.
+    // 예: const API_BASE = "https://hub.glacies.wiki:8787"; (프록시 두면 그 경로)
+    const API_BASE = "http://localhost:8787";
+
+    const $ = (sel) => document.querySelector(sel);
+    const form = $("#searchForm");
+    const resultSec = $("#result");
+    const card = $("#card");
+    const errSec = $("#errorBox");
+    const errMsg = $("#errorMsg");
+    const btn = $("#searchBtn");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errSec.style.display = "none";
+      resultSec.style.display = "none";
+      btn.disabled = true; btn.textContent = "조회 중...";
+
+      const name = $("#nickname").value.trim();
+      if (!name) { btn.disabled = false; btn.textContent = "조회"; return; }
+
+      try {
+        const r = await fetch(`${API_BASE}/api/character?name=${encodeURIComponent(name)}`);
+        if (!r.ok) throw new Error("서버 응답 오류");
+        const data = await r.json();
+
+        if (!data || !data.basic || !data.stat) {
+          throw new Error("데이터가 비었습니다.");
+        }
+
+        // 카드 렌더
+        const b = data.basic;
+        const g = data.guild || {};
+        const t = data.title || {};
+        const s = data.stat;
+
+        // stat 배열을 키-값 맵으로 변환
+        const statMap = {};
+        (s.stat || []).forEach(x => { statMap[x.stat_name] = x.stat_value; });
+
+        card.innerHTML = `
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div>
+              ${b.character_class_name ? `<div style="font-size:14px;color:var(--muted);">${b.character_class_name}</div>` : ""}
+              <h3 style="margin:4px 0 6px">${b.character_name || name}</h3>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;">
+                <div><strong>레벨</strong><br>${b.character_level ?? "-"}</div>
+                <div><strong>길드</strong><br>${g.guild_name || "-"}</div>
+                <div><strong>장착 타이틀</strong><br>${(t.title_equipment?.find(x=>x.title_type==="title")?.title_name) || "-"}</div>
+                <div><strong>타이틀 개수</strong><br>${b.total_title_count ?? "-"}</div>
+              </div>
+            </div>
+          </div>
+          <hr style="border:0;border-top:1px solid var(--border);margin:12px 0;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;">
+            <div><strong>공격력</strong><br>${statMap["공격력"] ?? "-"}</div>
+            <div><strong>마법 공격력</strong><br>${statMap["마법 공격력"] ?? "-"}</div>
+            <div><strong>방어력</strong><br>${statMap["방어력"] ?? "-"}</div>
+            <div><strong>크리티컬</strong><br>${statMap["크리티컬"] ?? "-"}</div>
+            <div><strong>밸런스</strong><br>${statMap["밸런스"] ?? "-"}</div>
+            <div><strong>추가피해</strong><br>${statMap["추가피해"] ?? "-"}</div>
+            <div><strong>대항력</strong><br>${statMap["대항력"] ?? "-"}</div>
+            <div><strong>공격속도</strong><br>${statMap["공격속도"] ?? "-"}</div>
+            <div><strong>공격력 제한 해제</strong><br>${statMap["공격력 제한 해제"] ?? "-"}</div>
+          </div>
+        `;
+
+        resultSec.style.display = "block";
+      } catch (err) {
+        errMsg.textContent = (err && err.message) ? err.message : "알 수 없는 오류";
+        errSec.style.display = "block";
+      } finally {
+        btn.disabled = false; btn.textContent = "조회";
+      }
+    });
+  </script>
 </body>
 </html>
